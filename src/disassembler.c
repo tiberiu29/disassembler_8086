@@ -56,7 +56,9 @@ char *disassemble(uint16_t instruction) {
 // 8. Base Relative + Indexed Addresing. EX: MOV CL, [BX + SI + 4] where 4 is displacement
 char *calculate_rm_operator() {
     // Aparently displacement can be up to 16 bits 
-    // This mean that my instruction can be 4 bytes so original assumption of 2 bytes is wrong.
+    // This means that my instruction can be 6 bytes (taking also immediate into account )
+    // original assumption of 2 bytes is wrong.
+    // TODO: fix
 
     return "";
 }
