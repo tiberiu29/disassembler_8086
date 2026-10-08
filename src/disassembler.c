@@ -2,64 +2,60 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
-//Structure 
-// [op-code][d][w][MOD][REG][R/M]
-// ---6------1--1---2----3----3-- = 2 BYTES core
-//
-// Additionally we can also have DISPLACEMENT + ADDITIONAL BYTES
-// [Displacement-LOW][DISPLACEMENT-HIGH][IMMEDIATE-LOW][IMMEDIATE-HIGH] = 4 BYTES optional
-// ----------8----------------8----------------8------------8----------
-char *disassemble(uint16_t instruction) {
-    uint8_t op_code = instruction >> 10 & 0b111111;
-    bool direction_flag = instruction >> 9 & 0b1;
-    bool width_flag = instruction >> 8 & 0b1;
-    uint8_t source;
-    uint8_t destination;
-
-    uint8_t mod_flag = instruction >> 6 &0b11;
-
-    uint8_t reg_operand = instruction >> 3 & 0b111; 
-    uint8_t rm_operand = instruction & 0b111; 
-
-    if(direction_flag) {
-       source = rm_operand;
-       destination = reg_operand;
-    } else {
-       source = reg_operand;
-       destination = rm_operand;
+uint8_t mask_of_n_bits(uint8_t n){
+    if(n < 1 || n > 8) {
+        printf("mask for 1 byte cannot be higher than 8 bits or lower than 1 bit");
+        exit(1);
     }
-
-    printf("Op_Code: %d \n", op_code);
-    printf("Direction_Flag: %s \n", direction_flag ? "true" : "false");
-    printf("Width_Flag: %s \n", width_flag ? "true" : "false");
-    printf("Source: %d \n", source);
-    printf("Destination: %d \n", destination);
-    printf("Mod_Flag: %d \n", mod_flag);
-
-    if(op_code == 34) {
-        return "mov";
-    }
-
-    return "NO-OP";
+    return ((1u << n) - 1u) << (8 - n);
 }
 
+// NOTE: op-code is variable size
+// NOTE: currently target only the mov instruction
+bool is_complex_instruction(uint8_t instruction) {
+   // 100010dw -> register/memory to/from register
+   // 1100011w -> immediate to register/memory
+   // 1011wreg -> immediate to register
+   // 1010000w -> memory to accumulator
+   // 1010001w -> accumulator to memory
+   if((instruction & mask_of_n_bits(6)) == 0b10001000 ||
+       (instruction & mask_of_n_bits(7)) == 0b11000110) {
+       return true;
+   }
 
-// There are 8 modes
-// 1. Immediate Addresing Mode. EX: MOV CL, 15H
-// 2. Register Addressing Mode. EX: MOV CL, DL
-// 3. Direct Addresing Mode. EX: MOV CL, [1000H]
-// 4. Implied Addresing Mode - still not sure what it is
-// 5. Register Indirect Addresing. EX: MOV CL, [BX]
-// 6. Register Relative Addresing. EX: MOV CL, [BX + 4] where 4 is DISPLACEMENT
-// 7. Base Indexed Addresing. EX: MOV CL, [BX + SI]
-// 8. Base Relative + Indexed Addresing. EX: MOV CL, [BX + SI + 4] where 4 is displacement
-char *calculate_rm_operator() {
-    // Aparently displacement can be up to 16 bits 
-    // This means that my instruction can be 6 bytes (taking also immediate into account )
-    // original assumption of 2 bytes is wrong.
-    // TODO: fix
+   if((instruction & mask_of_n_bits(4)) == 0b10110000 ||
+        (instruction & mask_of_n_bits(7)) == 0b10100000 ||
+        (instruction & mask_of_n_bits(7)) == 0b10100010){
+        return false;
+   }
 
+   printf("Unrecognized instruction");
+   exit(1);
+
+}
+
+char *disassemble(uint8_t instructions[], size_t length){
+    // start with a simple 1 element char* array
+    char **decoded_instructions = malloc(sizeof(char *));
+    int instruction_number = 0;
+    for(int instruction_index = 0; instruction_index < length; instruction_index ++) {
+        uint8_t byte_1 = instructions[instruction_index];
+        //TODO: figure out the op-code to map to mov
+        bool is_complex = is_complex_instruction(byte_1);
+
+        if(is_complex) {
+            uint8_t byte_2 = instructions[instruction_index + 1];
+            instruction_index++;
+            //TODO: determine whether displacement or immediate bytes exist, extract and advance instruction_index
+        } else {
+            printf("Not implemented yet simple instructions");
+            exit(1);
+        }
+        instruction_number++;
+    }
     return "";
 }
+
 
