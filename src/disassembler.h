@@ -6,25 +6,25 @@
 
 typedef struct Definition {
     char *name;
-    int8_t direction_bit_position;
-    int8_t width_bit_position;
+    int8_t direction_value;
+    int8_t width_value;
     bool has_r_m;
 }Definition;
 
-typedef struct Register {
+typedef struct Operand {
     char *name;
-} Register;
+} Operand;
 
 typedef struct Operands {
-    Register from;
-    Register to;
-    size_t displacement_value;
-    size_t immediate_value; //TODO: refine later the structure to accomodate imediate values
+    Operand *source;
+    Operand *destination;
+    int16_t displacement_value;
+    int16_t immediate_value; //TODO: refine later the structure to accomodate imediate values
 } Operands;
 
 typedef struct Instruction{
     Definition *definition;
-    Operands *options;
+    Operands *operands;
 }Instruction;
 
 Instruction **disassemble(uint8_t instructions[], size_t length);
