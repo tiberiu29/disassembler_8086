@@ -149,7 +149,7 @@ Definition *instruction_definition(uint8_t instruction) {
    if((instruction & create_mask(8, 4)) == 0b10110000) {
        definition->name = "mov";
        // width is expected to be 0/1 bit, shift bit from pos 2^3 -> 2^0
-       int8_t width = instruction & create_mask(4, 3) >> 3;
+       int8_t width = (instruction & create_mask(4, 3)) >> 3;
        populate_definition(definition, BIT_DISABLED, width, false);
    }
 
