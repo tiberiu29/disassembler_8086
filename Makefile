@@ -2,10 +2,12 @@
 
 CC=gcc
 CFLAGS=-Wall -Wextra -Wpedantic -g
-INCLUDES= -Isrc -I/workspace/unity
+INCLUDES= -Isrc -Isrc/helper -Isrc/instructions -I/workspace/unity
 
 test:
 	$(CC) $(CFLAGS) $(INCLUDES) \
+		src/helper/*.c \
+		src/instructions/*.c \
 		src/disassembler.c \
 		./unity/unity.c \
 		test/test_disassembler.c \

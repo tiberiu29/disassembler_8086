@@ -1,4 +1,6 @@
 CompileFlags:
   Add:
     - -I/workspace/src
+    - -I/workspace/src/instructions
+    - -I/workspace/src/helper
     - -I/workspace/unity

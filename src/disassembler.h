@@ -3,12 +3,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-
 typedef struct Definition {
     char *name;
-    int8_t direction_value;
-    int8_t width_value;
-    bool has_r_m;
 }Definition;
 
 typedef struct Operand {
@@ -27,5 +23,11 @@ typedef struct Instruction{
     Operands *operands;
 }Instruction;
 
-Instruction **disassemble(uint8_t instructions[], size_t length);
+typedef struct InstructionList{
+    Instruction **instructions;
+    size_t size;
+    size_t capacity;
+}InstructionList;
+
+InstructionList *disassemble(uint8_t instructions[], size_t length);
 #endif // !

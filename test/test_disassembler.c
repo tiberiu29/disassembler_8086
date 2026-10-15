@@ -22,13 +22,16 @@ void test_disassemble_move() {
     char actual_source[3];
 
     // when
-    Instruction **dissasembled_instructions = disassemble(instructions, sizeof(instructions));
-    Instruction *pInstruction = dissasembled_instructions[0];
+    InstructionList *instruction_list = disassemble(instructions, sizeof(instructions));
+    Instruction *pInstruction = instruction_list->instructions[0];
     strcpy(actual_instruction, pInstruction->definition->name);
     strcpy(actual_source, pInstruction->operands->source->name);
     strcpy(actual_destination, pInstruction->operands->destination->name);
 
     // then
+    // assert instruction
+
+    TEST_ASSERT_INT_WITHIN(0, 1, instruction_list->size);
     int result_instruction = strcmp(&expected_instruction[0], &actual_instruction[0]);
     int result_source = strcmp(&expected_source[0], &actual_source[0]);
     int result_destination = strcmp(&expected_destination[0], &actual_destination[0]);
