@@ -14,12 +14,12 @@ void test_disassemble_move() {
     uint8_t instructions[] = {0X89, 0xDA};
 
     char expected_instruction[] = "mov";
-    char expected_source[] = "DX";
-    char expected_destination[] = "BX";
+    char expected_destination[] = "DX";
+    char expected_source[] = "BX";
 
     char actual_instruction[4];
-    char actual_source[3];
     char actual_destination[3];
+    char actual_source[3];
 
     // when
     Instruction **dissasembled_instructions = disassemble(instructions, sizeof(instructions));

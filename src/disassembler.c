@@ -134,7 +134,8 @@ Definition *instruction_definition(uint8_t instruction) {
 
    if((instruction & create_mask(8, 2)) == 0b10001000) {
        definition->name = "mov";
-       int8_t direction = instruction & create_mask(2, 1) >> 1;
+       // direction is expected to be 0/1 bit, shift bit from pos 2^1 -> 2^0
+       int8_t direction = (instruction & create_mask(2, 1)) >> 1;
        int8_t width = instruction & create_mask(1, 0);
        populate_definition(definition, direction, width, true);
    }
@@ -147,8 +148,9 @@ Definition *instruction_definition(uint8_t instruction) {
 
    if((instruction & create_mask(8, 4)) == 0b10110000) {
        definition->name = "mov";
-       int8_t width = instruction & create_mask(4, 3);
-       populate_definition(definition, BIT_DISABLED, width, false);
+       // width is expected to be 0/1 bit, shift bit from pos 2^3 -> 2^0
+       int8_t width = instruction & create_mask(4, 3) >> 3;
+       populate_definition(definition, BIT_DISABLED, width >> 3, false);
    }
 
    if((instruction & create_mask(8, 1)) == 0b10100010 ||
