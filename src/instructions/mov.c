@@ -1,3 +1,4 @@
+#include "disassembler.h"
 #include "mask_generator.h"
 #include "opcode.h"
 #include "mask_generator.h"
@@ -76,8 +77,8 @@ DecodeResult *decode_r_m(uint8_t *bytes, size_t capacity) {
              exit(1);
          }
 
-         Operand *reg_operand = map_register(reg, width);
-         Operand *r_m_operand = map_register(r_m, width);
+         Operand *reg_operand = map_register(reg, width, false);
+         Operand *r_m_operand = map_register(r_m, width, mod == 0b00);
 
          if(direction == 0) {
              operands->source=reg_operand;

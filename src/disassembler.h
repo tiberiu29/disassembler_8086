@@ -1,5 +1,6 @@
 #ifndef DISASSEMBLER_H
 #define DISASSEMBLER_H
+#include "operand.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -7,15 +8,10 @@ typedef struct Definition {
     char *name;
 }Definition;
 
-typedef struct Operand {
-    char *name;
-} Operand;
-
 typedef struct Operands {
     Operand *source;
     Operand *destination;
     int16_t displacement_value;
-    int16_t immediate_value; //TODO: refine later the structure to accomodate imediate values
 } Operands;
 
 typedef struct Instruction{

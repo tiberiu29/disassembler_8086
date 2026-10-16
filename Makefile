@@ -8,7 +8,7 @@ test:
 	$(CC) $(CFLAGS) $(INCLUDES) \
 		src/helper/*.c \
 		src/instructions/*.c \
-		src/disassembler.c \
+		src/*.c \
 		./unity/unity.c \
 		test/test_disassembler.c \
 		-o test_disassembler
