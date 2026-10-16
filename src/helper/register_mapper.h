@@ -15,5 +15,6 @@
  * 110 | DH          | SI
  * 111 | BH          | DI
  */
-Operand *map_register(uint8_t reg, uint8_t width, bool is_register_memory);
+Operand *map_r_m(uint8_t reg, uint8_t width, uint8_t mod, uint8_t *bytes, uint8_t *count_bytes_read);
+Operand *map_reg(uint8_t reg, uint8_t width);
 #endif

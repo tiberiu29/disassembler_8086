@@ -52,7 +52,7 @@ DecodeResult *decode_r_m(uint8_t *bytes, size_t capacity) {
     }
 
     DecodeResult *result = initialize(MOV);
-    int current_index = 0;
+    uint8_t current_index = 0;
     uint8_t op_code_byte = bytes[current_index];
     int8_t direction = (op_code_byte & generate_mask(2, 1)) >> 1;
     int8_t width = op_code_byte & generate_mask(1, 0);
@@ -66,38 +66,30 @@ DecodeResult *decode_r_m(uint8_t *bytes, size_t capacity) {
     }
 
     uint8_t mod = mod_value(register_byte);
+    uint8_t reg = reg_value(register_byte);
+    uint8_t r_m = r_m_value(register_byte);
 
-    if(mod == 0b00 || mod == 0b11) {
-        uint8_t reg = reg_value(register_byte);
-        uint8_t r_m = r_m_value(register_byte);
+     Operands *operands = malloc(sizeof(Operands));
+     if(operands == NULL) {
+         printf("Could not initialize operands");
+         exit(1);
+     }
 
-         Operands *operands = malloc(sizeof(Operands));
-         if(operands == NULL) {
-             printf("Could not initialize operands");
-             exit(1);
-         }
+     Operand *reg_operand = map_reg(reg, width);
+     Operand *r_m_operand = map_r_m(r_m, width, mod, bytes, &current_index);
 
-         Operand *reg_operand = map_register(reg, width, false);
-         Operand *r_m_operand = map_register(r_m, width, mod == 0b00);
+     if(direction == 0) {
+         operands->source=reg_operand;
+         operands->destination=r_m_operand;
+     } else {
+         operands->source=r_m_operand;
+         operands->destination=reg_operand;
+     }
 
-         if(direction == 0) {
-             operands->source=reg_operand;
-             operands->destination=r_m_operand;
-         } else {
-             operands->source=r_m_operand;
-             operands->destination=reg_operand;
-         }
+     result->instruction->operands = operands;
+     result->bytes_consumed = current_index + 1;
 
-         result->instruction->operands = operands;
-         result->bytes_consumed = current_index + 1;
-
-         return result;
-
-    } else {
-        // TODO: deal with displacement later
-        return NULL;
-    }
-
+     return result;
 }
 
 static const OpcodePattern mov_patterns[] = {
