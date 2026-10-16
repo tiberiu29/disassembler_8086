@@ -1,6 +1,7 @@
 #include "disassembler.h"
 #include "mov.h"
 #include "opcode.h"
+#include "operand.h"
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
@@ -32,6 +33,18 @@ InstructionList *initialize_result_list() {
 void add_to_result(InstructionList *instruction_list, Instruction *instruction) {
     instruction_list->instructions[instruction_list->size] = instruction;    
     instruction_list->size = instruction_list->size + 1;
+}
+
+void instruction_destroy(InstructionList *instruction_list) {
+   for(size_t i = 0; i < instruction_list->size; i++) {
+       Instruction *instruction = instruction_list->instructions[i];
+
+       free(instruction->definition);
+       operand_destroy(instruction->operands->source);
+       operand_destroy(instruction->operands->destination);
+       free(instruction);
+   }
+   free(instruction_list);
 }
 
 InstructionList *disassemble(uint8_t instruction_bytes[], size_t length){

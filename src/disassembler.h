@@ -26,4 +26,6 @@ typedef struct InstructionList{
 }InstructionList;
 
 InstructionList *disassemble(uint8_t instructions[], size_t length);
+
+void instruction_destroy(InstructionList *instructions);
 #endif // !

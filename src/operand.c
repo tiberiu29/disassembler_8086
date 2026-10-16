@@ -40,3 +40,10 @@ char *get_name(Operand *operand) {
 OperandType get_type(Operand *operand){
     return operand->type;
 }
+
+void operand_destroy(Operand *operand){
+    if(operand == NULL) {
+        return;
+    }
+    free(operand);
+}

@@ -12,5 +12,5 @@ Operand *init_memory_register_type(char *register_name);
 Operand *init_immediate_type(uint16_t memory_location);
 char *get_name(Operand *operand);
 OperandType get_type(Operand *operand);
-
+void operand_destroy(Operand *operand);
 #endif

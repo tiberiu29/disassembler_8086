@@ -33,7 +33,6 @@ void test_disassemble_move() {
     // assert instruction
     
     // verify this is reg -> reg instruction
-    
     TEST_ASSERT_EQUAL(REGISTER_VALUE, get_type(pInstruction->operands->source));
     TEST_ASSERT_EQUAL(REGISTER_VALUE, get_type(pInstruction->operands->destination));
     
@@ -45,6 +44,8 @@ void test_disassemble_move() {
     TEST_ASSERT_INT_WITHIN(0, 0, result_instruction);
     TEST_ASSERT_INT_WITHIN(0, 0, result_source);
     TEST_ASSERT_INT_WITHIN(0, 0, result_destination);
+
+    instruction_destroy(instruction_list);
 }
 
 int main(void) {
