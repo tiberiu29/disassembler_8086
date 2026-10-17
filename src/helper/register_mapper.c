@@ -1,11 +1,34 @@
 #include "register_mapper.h"
 #include "operand.h"
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
+char *calculate_register(char *name, uint16_t displacement) {
+   size_t displacement_size = UINT16_MAX;
+   size_t separator_size = 3;
+   size_t terminator_size = 1;
+   size_t buffer_size = strlen(name) + separator_size + displacement_size + terminator_size;
+   
+   char *buffer = malloc(buffer_size);
+
+   snprintf(buffer, buffer_size, "%s + %d", name, displacement);
+
+   return buffer;
+}
+
+uint16_t calculate_displacement_8(uint8_t *bytes, uint8_t *current_index) {
+    *current_index = *current_index + 1;
+    return bytes[*current_index];
+}
 // 8086 is little-endian ->lsb will be the first byte and msb the second byte
-uint16_t calculate_displacement(uint8_t lsb, uint8_t msb) {
-    return 0;
+uint16_t calculate_displacement_16(uint8_t *bytes, uint8_t *current_index) {
+    *current_index = *current_index + 1;
+    uint16_t lsb_16_bit = bytes[*current_index];
+    *current_index = *current_index + 1;
+    uint16_t msb_16_bit = bytes[*current_index]<< 8;
+
+    return lsb_16_bit | msb_16_bit;
 }
 
 Operand *map_reg(uint8_t reg, uint8_t width) {
@@ -75,7 +98,23 @@ Operand *map_reg(uint8_t reg, uint8_t width) {
     return init_register_type(name);
 }
 
-Operand *map_r_m_mod_00(uint8_t reg) {
+Operand *map_r_m_mod_10(uint8_t reg, uint8_t *bytes, uint8_t *current_index) {
+    //TODO rest later
+    char *name;
+    switch(reg){
+        case 0b111:
+            uint16_t displacement = calculate_displacement_16(bytes, current_index);
+            name = calculate_register("BX", displacement);
+            break;
+        default:
+            printf("R_M not valid");
+            exit(1);
+    }
+        return init_memory_register_type(name);
+}
+
+
+Operand *map_r_m_mod_00(uint8_t reg, uint8_t *bytes, uint8_t *count_bytes_read) {
     char *name;
     switch(reg){
         case 0b000:
@@ -97,8 +136,9 @@ Operand *map_r_m_mod_00(uint8_t reg) {
             name = "DI";
             break;
         case 0b110:
-            printf("Displacement not supported yet");
+            printf("Special case MOD 00 R_M 110 not supported yet");
             exit(1);
+            break;
         case 0b111:
             name = "BX";
             break;
@@ -131,10 +171,14 @@ Operand *map_r_m_mod_00(uint8_t reg) {
  *
  * Source: Intel 8086 Reference, Table 1-20.
  */
-Operand *map_r_m(uint8_t reg, uint8_t width, uint8_t mod, uint8_t *bytes, uint8_t *count_bytes_read) {
+Operand *map_r_m(uint8_t reg, uint8_t width, uint8_t mod, uint8_t *bytes, uint8_t *current_index) {
     //TODO: deal with displacement here.
     if(mod == 0b00) {
-        return map_r_m_mod_00(reg);
+        return map_r_m_mod_00(reg, bytes, current_index);
+    }
+
+    if(mod == 0b10){
+        return map_r_m_mod_10(reg, bytes, current_index);
     }
 
     if(mod == 0b11){
