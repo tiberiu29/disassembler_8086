@@ -5,11 +5,7 @@
 #include <stdlib.h>
 
 char *calculate_register(char *name, uint16_t displacement) {
-   size_t displacement_size = UINT16_MAX;
-   size_t separator_size = 3;
-   size_t terminator_size = 1;
-   size_t buffer_size = strlen(name) + separator_size + displacement_size + terminator_size;
-   
+   size_t buffer_size = snprintf(NULL, 0, "%s + %d", name, displacement) + 1;
    char *buffer = malloc(buffer_size);
 
    snprintf(buffer, buffer_size, "%s + %d", name, displacement);
