@@ -1,6 +1,7 @@
 #include "register_mapper.h"
 #include "operand.h"
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 
