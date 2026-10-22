@@ -19,7 +19,7 @@ for elf in main.o main; do
     readelf -Ws "$elf" > "$out/symbols.txt"
     readelf -WS "$elf" > "$out/sections.txt"
 
-    objdump -d -M intel -j .plt "$elf" > "$out/plt.txt"
-    objdump -s -j .got "$elf" > "$out/got.txt"
-    objdump -s -j .got.plt "$elf" > "$out/got_plt.txt"
+    objdump -d -M intel -j .plt "$elf" > "$out/plt.txt" 2>&1
+    objdump -s -j .got "$elf" > "$out/got.txt" 2>&1
+    objdump -s -j .got.plt "$elf" > "$out/got_plt.txt" 2>&1
 done
