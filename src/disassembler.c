@@ -30,6 +30,7 @@ InstructionList *initialize_result_list() {
     return instruction_list;
 }
 
+//TODO: if capacity is reached, extend/copy
 void add_to_result(InstructionList *instruction_list, Instruction *instruction) {
     instruction_list->instructions[instruction_list->size] = instruction;    
     instruction_list->size = instruction_list->size + 1;
@@ -58,7 +59,7 @@ InstructionList *disassemble(uint8_t instruction_bytes[], size_t length){
             if((*instruction_byte & patterns[pattern_i].mask) == patterns[pattern_i].value) {
                 DecodeResult *decoded_instruction = patterns->decode(instruction_byte, length - byte_index);
                 add_to_result(instructions_result, decoded_instruction->instruction);
-                byte_index = byte_index + decoded_instruction->bytes_consumed;
+                byte_index = byte_index + (decoded_instruction->bytes_consumed - 1);
                 break;
             } else{
                 printf("Invalid Instruction");

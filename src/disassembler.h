@@ -1,29 +1,29 @@
 #ifndef DISASSEMBLER_H
 #define DISASSEMBLER_H
 #include "operand.h"
-#include <stdint.h>
-#include <stddef.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 typedef struct Definition {
-    char *name;
-}Definition;
+  char *name;
+} Definition;
 
 typedef struct Operands {
-    Operand *source;
-    Operand *destination;
-    int16_t displacement_value;
+  Operand *source;
+  Operand *destination;
+  int16_t displacement_value;
 } Operands;
 
-typedef struct Instruction{
-    Definition *definition;
-    Operands *operands;
-}Instruction;
+typedef struct Instruction {
+  Definition *definition;
+  Operands *operands;
+} Instruction;
 
-typedef struct InstructionList{
-    Instruction **instructions;
-    size_t size;
-    size_t capacity;
-}InstructionList;
+typedef struct InstructionList {
+  Instruction **instructions;
+  size_t size;
+  size_t capacity;
+} InstructionList;
 
 InstructionList *disassemble(uint8_t instructions[], size_t length);
 

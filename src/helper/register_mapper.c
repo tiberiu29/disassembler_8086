@@ -12,10 +12,10 @@ char *calculate_register(char *name, int16_t displacement) {
        sign = "-";
        displacement = ~displacement + 1;
    }
-   size_t buffer_size = snprintf(NULL, 0, "%s %s %d", name, sign, displacement) + 1;
+   size_t buffer_size = snprintf(NULL, 0, "[%s %s %d]", name, sign, displacement) + 1;
    char *buffer = malloc(buffer_size);
 
-   snprintf(buffer, buffer_size, "%s %s %d", name, sign, displacement);
+   snprintf(buffer, buffer_size, "[%s %s %d]", name, sign, displacement);
 
    return buffer;
 }
@@ -121,29 +121,29 @@ Operand *map_r_m_mod_00(uint8_t reg, uint8_t *bytes, uint8_t *count_bytes_read) 
     char *name;
     switch(reg){
         case 0b000:
-            name = "BX+SI";
+            name = "[BX+SI]";
             break;
         case 0b001:
-            name = "BX+DI";
+            name = "[BX+DI]";
             break;
         case 0b010:
-            name = "BP+SI";
+            name = "[BP+SI]";
             break;
         case 0b011:
-            name = "BP+DI";
+            name = "[BP+DI]";
             break;
         case 0b100:
-            name = "SI";
+            name = "[SI]";
             break;
         case 0b101:
-            name = "DI";
+            name = "[DI]";
             break;
         case 0b110:
             printf("Special case MOD 00 R_M 110 not supported yet");
             exit(1);
             break;
         case 0b111:
-            name = "BX";
+            name = "[BX]";
             break;
         default:
             printf("R_M not valid");
