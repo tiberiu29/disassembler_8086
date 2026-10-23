@@ -5,25 +5,31 @@
 #include <string.h>
 #include <stdlib.h>
 
-char *calculate_register(char *name, uint16_t displacement) {
-   size_t buffer_size = snprintf(NULL, 0, "%s + %d", name, displacement) + 1;
+char *calculate_register(char *name, int16_t displacement) {
+   char *sign = "+";
+   if(displacement < 0) {
+       // convert to positive complement such that we only manipulate sign
+       sign = "-";
+       displacement = ~displacement + 1;
+   }
+   size_t buffer_size = snprintf(NULL, 0, "%s %s %d", name, sign, displacement) + 1;
    char *buffer = malloc(buffer_size);
 
-   snprintf(buffer, buffer_size, "%s + %d", name, displacement);
+   snprintf(buffer, buffer_size, "%s %s %d", name, sign, displacement);
 
    return buffer;
 }
 
-uint16_t calculate_displacement_8(uint8_t *bytes, uint8_t *current_index) {
+int16_t calculate_displacement_8(uint8_t *bytes, uint8_t *current_index) {
     *current_index = *current_index + 1;
     return bytes[*current_index];
 }
 // 8086 is little-endian ->lsb will be the first byte and msb the second byte
-uint16_t calculate_displacement_16(uint8_t *bytes, uint8_t *current_index) {
+int calculate_displacement_16(uint8_t *bytes, uint8_t *current_index) {
     *current_index = *current_index + 1;
-    uint16_t lsb_16_bit = bytes[*current_index];
+    int16_t lsb_16_bit = bytes[*current_index];
     *current_index = *current_index + 1;
-    uint16_t msb_16_bit = bytes[*current_index]<< 8;
+    int16_t msb_16_bit = bytes[*current_index] << 8;
 
     return lsb_16_bit | msb_16_bit;
 }
@@ -100,7 +106,7 @@ Operand *map_r_m_mod_10(uint8_t reg, uint8_t *bytes, uint8_t *current_index) {
     char *name;
     switch(reg){
         case 0b111:
-            uint16_t displacement = calculate_displacement_16(bytes, current_index);
+            int displacement = calculate_displacement_16(bytes, current_index);
             name = calculate_register("BX", displacement);
             break;
         default:
