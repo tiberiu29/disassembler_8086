@@ -24,6 +24,7 @@ int16_t calculate_displacement_8(uint8_t *bytes, uint8_t *current_index) {
     *current_index = *current_index + 1;
     return bytes[*current_index];
 }
+
 // 8086 is little-endian ->lsb will be the first byte and msb the second byte
 int calculate_displacement_16(uint8_t *bytes, uint8_t *current_index) {
     *current_index = *current_index + 1;
@@ -101,6 +102,20 @@ Operand *map_reg(uint8_t reg, uint8_t width) {
     return init_register_type(name);
 }
 
+/*
+ * R/M | MOD=10          
+ * ----+----------------
+ * 000 | [BX+SI+disp16]  
+ * 001 | [BX+DI+disp16]  
+ * 010 | [BP+SI+disp16]  
+ * 011 | [BP+DI+disp16]  
+ * 100 | [SI+disp16]     
+ * 101 | [DI+disp16]     
+ * 110 | [BP+disp16]     
+ * 111 | [BX+disp16]     
+ *
+ * Source: Intel 8086 Reference, Table 1-20.
+ */
 Operand *map_r_m_mod_10(uint8_t reg, uint8_t *bytes, uint8_t *current_index) {
     //TODO rest later
     char *name;
@@ -117,6 +132,20 @@ Operand *map_r_m_mod_10(uint8_t reg, uint8_t *bytes, uint8_t *current_index) {
 }
 
 
+/*
+ * R/M | MOD=00   
+ * ----+---------
+ * 000 | [BX+SI]  
+ * 001 | [BX+DI]  
+ * 010 | [BP+SI]  
+ * 011 | [BP+DI]  
+ * 100 | [SI]     
+ * 101 | [DI]     
+ * 110 | [disp16] 
+ * 111 | [BX]     
+ *
+ * Source: Intel 8086 Reference, Table 1-20.
+ */
 Operand *map_r_m_mod_00(uint8_t reg, uint8_t *bytes, uint8_t *count_bytes_read) {
     char *name;
     switch(reg){
