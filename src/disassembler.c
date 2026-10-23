@@ -9,31 +9,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define BIT_DISABLED UINT8_MAX
+#define INITIAL_INSTRUCTION_ARRAY_CAPACITY 10
+#define INSTRUCTION_LIST_EXTEND_FACTOR 2
 
-InstructionList *initialize_result_list() {
-    Instruction **instructions = malloc(10 * sizeof(Instruction *));
+Instruction **initialize_instructions_array(size_t size) {
+    Instruction **instructions = malloc(size *sizeof(Instruction *));
+
     if(instructions == NULL) {
-        printf("Could not initialize instruction list");
+        printf("Coult not initialize instructions list");
         exit(1);
     }
 
+    return instructions;
+}
+
+void extend_instruction_list(InstructionList *instruction_list) {
+    size_t extended_capacity = instruction_list->capacity * INSTRUCTION_LIST_EXTEND_FACTOR;
+    Instruction **extended_instruction_arr = initialize_instructions_array(extended_capacity);
+    memcpy(extended_instruction_arr, instruction_list->instructions, instruction_list->size * sizeof(Instruction *));
+    instruction_list->capacity = extended_capacity;
+}
+
+InstructionList *initialize_result_list() {
     InstructionList *instruction_list = malloc(sizeof(InstructionList));
     if(instruction_list == NULL) {
         printf("Could not initialize instruction list");
         exit(1);
     }
 
-    instruction_list->instructions = instructions; 
+    instruction_list->instructions = initialize_instructions_array(INITIAL_INSTRUCTION_ARRAY_CAPACITY); 
     instruction_list->size = 0;
     instruction_list->capacity = 10;
 
     return instruction_list;
 }
 
-//TODO: if capacity is reached, extend/copy
 void add_to_result(InstructionList *instruction_list, Instruction *instruction) {
+    if(instruction_list->size + 1 == instruction_list->capacity) {
+        extend_instruction_list(instruction_list);
+    }
+
     instruction_list->instructions[instruction_list->size] = instruction;    
-    instruction_list->size = instruction_list->size + 1;
+    instruction_list->size++;
 }
 
 void instruction_destroy(InstructionList *instruction_list) {

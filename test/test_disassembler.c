@@ -66,7 +66,10 @@ void test_disassemble_move_reg_to_memory() {
 
 void test_disassemble_move_reg_to_memory_with_displacement() {
   // given
-  uint8_t instructions[] = {0X8b, 0x97, 0xd2, 0x04, 0X8b, 0x97, 0x2e, 0xfb};
+  uint8_t instructions[] = {
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0x2e, 0xfb
+  };
 
   char expected_instruction[] = "mov";
   char expected_destination[] = "DX";
@@ -102,8 +105,36 @@ void test_disassemble_move_reg_to_memory_with_displacement() {
   instruction_destroy(instruction_list);
 }
 
+void test_instruction_list_growth() {
+  // given
+  uint8_t instructions[] = {
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+      0X8b, 0x97, 0xd2, 0x04,
+  };
+
+
+  // when
+  InstructionList *instruction_list = disassemble(instructions, sizeof(instructions));
+
+  // then
+  TEST_ASSERT_INT_WITHIN(0, 11, instruction_list->size);
+  TEST_ASSERT_INT_WITHIN(0, 20, instruction_list->capacity);
+
+  instruction_destroy(instruction_list);
+}
+
 int main(void) {
   UNITY_BEGIN();
+  RUN_TEST(test_instruction_list_growth);
   RUN_TEST(test_disassemble_move_reg_to_reg);
   RUN_TEST(test_disassemble_move_reg_to_memory);
   RUN_TEST(test_disassemble_move_reg_to_memory_with_displacement);
