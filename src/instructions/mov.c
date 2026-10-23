@@ -1,4 +1,3 @@
-#include "disassembler.h"
 #include "mask_generator.h"
 #include "opcode.h"
 #include "mask_generator.h"
