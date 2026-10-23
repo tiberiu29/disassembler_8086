@@ -27,8 +27,7 @@ main:
 
     xor eax, eax                  
 
-    call printf wrt ..plt         ; wrt .. plt will use Procedure Linkage Table
-                                  ; this is needed because printf is not part of our code - must be linked 
+    call printf wrt ..plt         ; printf will be dynamically linked using PLT+GOT entries
                                   ; System V ABI:
                                   ; RDI = 1st argument (format address)
                                   ; ESI = 2nd argument (integer 20)
