@@ -119,9 +119,30 @@ Operand *map_reg(uint8_t reg, uint8_t width) {
 Operand *map_r_m_mod_10(uint8_t reg, uint8_t *bytes, uint8_t *current_index) {
     //TODO rest later
     char *name;
+    int displacement = calculate_displacement_16(bytes, current_index);
     switch(reg){
+        case 0b000:
+            name = calculate_register("BX + SI", displacement);
+            break;
+        case 0b001:
+            name = calculate_register("BX + DI", displacement);
+            break;
+        case 0b010:
+            name = calculate_register("BP + SI", displacement);
+            break;
+        case 0b011:
+            name = calculate_register("BP + DI", displacement);
+            break;
+        case 0b100:
+            name = calculate_register("SI", displacement);
+            break;
+        case 0b101:
+            name = calculate_register("DI", displacement);
+            break;
+        case 0b110:
+            name = calculate_register("BP", displacement);
+            break;
         case 0b111:
-            int displacement = calculate_displacement_16(bytes, current_index);
             name = calculate_register("BX", displacement);
             break;
         default:

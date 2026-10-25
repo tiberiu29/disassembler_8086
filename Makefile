@@ -1,19 +1,46 @@
-.PHONY: test clean
+.DEFAULT_GOAL := test
 
-CC=gcc
-CFLAGS=-Wall -Wextra -Wpedantic -g
-INCLUDES= -Isrc -Isrc/model -Isrc/helper -Isrc/instructions -I/workspace/unity
+CC := gcc
+CPPFLAGS := -Isrc -Isrc/model -Isrc/helper -Isrc/instructions -Iunity
+CFLAGS := -std=gnu11 -Wall -Wextra -Wpedantic -g
+BUILD_DIR := build
 
-test:
-	$(CC) $(CFLAGS) $(INCLUDES) \
-		src/model/*.c \
-		src/helper/*.c \
-		src/instructions/*.c \
-		src/*.c \
-		./unity/unity.c \
-		test/test_disassembler.c \
-		-o test_disassembler
-	./test_disassembler
+# Production sources only.
+SRC := $(wildcard src/*.c src/model/*.c src/helper/*.c src/instructions/*.c)
+OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRC))
+UNITY_OBJ := $(BUILD_DIR)/unity/unity.o
+
+# Discover test files in the root test/ and module test/ folders.
+TEST_SRC := $(wildcard test/test_*.c src/*/test/test_*.c)
+TEST_BIN := $(patsubst %.c,$(BUILD_DIR)/%,$(TEST_SRC))
+TEST_OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(TEST_SRC))
+
+.PHONY: all test clean list-tests
+
+all: $(TEST_BIN)
+
+test: $(TEST_BIN)
+	@set -e; for test_bin in $(TEST_BIN); do \
+		printf '\n== Running %s ==\n' "$$test_bin"; \
+		"./$$test_bin"; \
+	done
+
+list-tests:
+	@printf '%s\n' $(TEST_BIN)
+
+# Each test source produces a separate executable.
+$(TEST_BIN): %: %.o $(OBJ) $(UNITY_OBJ)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $^ -o $@
+
+# Compile .c files into .o files.
+$(BUILD_DIR)/%.o: %.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+
+# Automatically track header dependencies.
+-include $(OBJ:.o=.d) $(TEST_OBJ:.o=.d) $(UNITY_OBJ:.o=.d)
 
 clean:
-	rm -f test_disassembler
+	rm -rf $(BUILD_DIR)
+
