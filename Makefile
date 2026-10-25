@@ -4,6 +4,7 @@ CC := gcc
 CPPFLAGS := -Isrc -Isrc/model -Isrc/helper -Isrc/instructions -Iunity
 CFLAGS := -std=gnu11 -Wall -Wextra -Wpedantic -g
 BUILD_DIR := build
+TEST_PATTERN := test/test_*.c
 
 # Production sources only.
 SRC := $(wildcard src/*.c src/model/*.c src/helper/*.c src/instructions/*.c)
@@ -11,7 +12,7 @@ OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRC))
 UNITY_OBJ := $(BUILD_DIR)/unity/unity.o
 
 # Discover test files in the root test/ and module test/ folders.
-TEST_SRC := $(wildcard test/test_*.c src/*/test/test_*.c)
+TEST_SRC := $(wildcard $(TEST_PATTERN) src/*/$(TEST_PATTERN))
 TEST_BIN := $(patsubst %.c,$(BUILD_DIR)/%,$(TEST_SRC))
 TEST_OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(TEST_SRC))
 
@@ -29,6 +30,8 @@ list-tests:
 	@printf '%s\n' $(TEST_BIN)
 
 # Each test source produces a separate executable.
+# NOTE: this is a bit problematic because I link all $(OBJ) files
+# but I will keep it like this for now
 $(TEST_BIN): %: %.o $(OBJ) $(UNITY_OBJ)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $^ -o $@
