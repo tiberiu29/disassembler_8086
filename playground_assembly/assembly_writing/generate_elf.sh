@@ -6,8 +6,8 @@ rm -rf main
 
 SOURCE="$1"
 
-nasm -f elf64 "$SOURCE" -o main.o
-gcc main.o -o main
+nasm -f elf64 -g -F dwarf "$SOURCE" -o main.o
+gcc -g main.o -o main
 ./main
 
 mkdir -p elf_output/main.o elf_output/main
@@ -16,7 +16,7 @@ for elf in main.o main; do
     out="elf_output/$elf"
 
     readelf -Wh "$elf" > "$out/elf_header.txt"
-    readelf -Wr "$elf" > "$out/elf_relocations.txt"
+    readelf -Wrd "$elf" > "$out/elf_relocations.txt" #-r -> .rela.dyn +.rela.plt. -d reads .dynamic
     readelf -Ws "$elf" > "$out/elf_symbols.txt"
     readelf -WS "$elf" > "$out/elf_sections.txt"
     readelf -Wl  "$elf" > "$out/elf_program_headers.txt" 2>&1
