@@ -19,8 +19,8 @@ for elf in main.o main; do
 
     #-d.dynamic -> dynamic linker entry point
     #-r -> .rela.dyn +.rela.plt. 
-    #-p .dynstr -> string dump .dynstr (needed by #NEEDED section of .dynamic)
-    readelf -Wrd -p .dynstr "$elf" > "$out/elf_relocations.txt" 2>&1
+    #-x .dynstr -> hex dump .dynstr (needed by #NEEDED section of .dynamic)
+    readelf -Wrd -x .dynstr "$elf" > "$out/elf_relocations.txt" 2>&1
 
     readelf -Ws "$elf" > "$out/elf_symbols.txt"
     readelf -WS "$elf" > "$out/elf_sections.txt"
