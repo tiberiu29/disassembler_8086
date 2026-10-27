@@ -16,7 +16,12 @@ for elf in main.o main; do
     out="elf_output/$elf"
 
     readelf -Wh "$elf" > "$out/elf_header.txt"
-    readelf -Wrd "$elf" > "$out/elf_relocations.txt" #-r -> .rela.dyn +.rela.plt. -d reads .dynamic
+
+    #-d.dynamic -> dynamic linker entry point
+    #-r -> .rela.dyn +.rela.plt. 
+    #-p .dynstr -> string dump .dynstr (needed by #NEEDED section of .dynamic)
+    readelf -Wrd -p .dynstr "$elf" > "$out/elf_relocations.txt" 2>&1
+
     readelf -Ws "$elf" > "$out/elf_symbols.txt"
     readelf -WS "$elf" > "$out/elf_sections.txt"
     readelf -Wl  "$elf" > "$out/elf_program_headers.txt" 2>&1
