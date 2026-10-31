@@ -92,12 +92,16 @@ DecodeResult *decode_immediate_to_reg(uint8_t *bytes, size_t capacity) {
     uint8_t current_index = 0;
     uint8_t register_byte = bytes[current_index];
 
-    uint8_t width = register_byte & generate_mask(4, 3);
+    uint8_t width = (register_byte & generate_mask(4, 3)) >> 3;
     uint8_t reg = register_byte & generate_mask(3, 0);
 
-    uint16_t immediate_value = width = 1 ?
-        calculate_data_16_bits(bytes, &current_index) :
-        calculate_data_8_bits(bytes, &current_index);
+    int16_t immediate_value;
+
+    if(width == 1) {
+        immediate_value = calculate_data_16_bits(bytes, &current_index);
+    } else {
+        immediate_value = calculate_data_8_bits(bytes, &current_index);
+    }
 
      Operands *operands = malloc(sizeof(Operands));
      if(operands == NULL) {

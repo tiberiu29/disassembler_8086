@@ -6,7 +6,7 @@ typedef struct Operand{
     OperandType type;
     union {
         char *name;
-        int immediate_value;
+        int16_t immediate_value;
     };
 } Operand;
 
@@ -29,7 +29,7 @@ Operand *init_memory_register_type(char *register_name){
 
 }
 
-Operand *init_immediate_type(uint16_t immediate_value){
+Operand *init_immediate_type(int16_t immediate_value){
     Operand *op = init_empty();
     op->type = IMMEDIATE;
     op->immediate_value = immediate_value; 
@@ -44,7 +44,7 @@ char *get_name(Operand *operand) {
     return operand->name;
 }
 
-int get_immediate_value(Operand *operand) {
+int16_t get_immediate_value(Operand *operand) {
     if(operand->type != IMMEDIATE){
         printf("This is a register type");
         return 0;
