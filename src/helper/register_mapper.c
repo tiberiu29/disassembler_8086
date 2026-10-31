@@ -1,5 +1,6 @@
 #include "register_mapper.h"
 #include "operand.h"
+#include "data_mapper.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
@@ -18,21 +19,6 @@ char *calculate_register(char *name, int16_t displacement) {
    snprintf(buffer, buffer_size, "[%s %s %d]", name, sign, displacement);
 
    return buffer;
-}
-
-int16_t calculate_displacement_8(uint8_t *bytes, uint8_t *current_index) {
-    *current_index = *current_index + 1;
-    return bytes[*current_index];
-}
-
-// 8086 is little-endian ->lsb will be the first byte and msb the second byte
-int calculate_displacement_16(uint8_t *bytes, uint8_t *current_index) {
-    *current_index = *current_index + 1;
-    int16_t lsb_16_bit = bytes[*current_index];
-    *current_index = *current_index + 1;
-    int16_t msb_16_bit = bytes[*current_index] << 8;
-
-    return lsb_16_bit | msb_16_bit;
 }
 
 Operand *map_reg(uint8_t reg, uint8_t width) {
@@ -119,7 +105,7 @@ Operand *map_reg(uint8_t reg, uint8_t width) {
 Operand *map_r_m_mod_10(uint8_t reg, uint8_t *bytes, uint8_t *current_index) {
     //TODO rest later
     char *name;
-    int displacement = calculate_displacement_16(bytes, current_index);
+    int displacement = calculate_data_16_bits(bytes, current_index);
     switch(reg){
         case 0b000:
             name = calculate_register("BX + SI", displacement);
