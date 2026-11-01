@@ -4,7 +4,7 @@ CC := gcc
 CPPFLAGS := -Isrc -Isrc/model -Isrc/helper -Isrc/instructions -Iunity
 CFLAGS := -std=gnu11 -Wall -Wextra -Wpedantic -g
 BUILD_DIR := build
-TEST_PATTERN := test/*/test_*.c
+TEST_PATTERN := $(shell find test -type f -name 'test_*.c')
 
 # Production sources only.
 SRC := $(wildcard src/*.c src/model/*.c src/helper/*.c src/instructions/*.c)

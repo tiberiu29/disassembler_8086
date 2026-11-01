@@ -1,5 +1,4 @@
 #include "disassembler.h"
-#include "operand.h"
 #include "unity.h"
 #include <stdint.h>
 
@@ -40,8 +39,8 @@ void test_disassemble_different_mov_families() {
   TEST_ASSERT_EQUAL(REGISTER_VALUE, get_type(actual_instruction_2->operands->destination));
   
   // IMMEDIATE NEGATIVE
-  TEST_ASSERT_EQUAL(IMMEDIATE, get_type(actual_instruction_2->operands->source));
-  TEST_ASSERT_EQUAL(REGISTER_VALUE, get_type(actual_instruction_2->operands->destination));
+  TEST_ASSERT_EQUAL(IMMEDIATE, get_type(actual_instruction_3->operands->source));
+  TEST_ASSERT_EQUAL(REGISTER_VALUE, get_type(actual_instruction_3->operands->destination));
 
   // verify reg and r_m names
   TEST_ASSERT_INT_WITHIN(0, 3, instruction_list->size);
@@ -55,9 +54,9 @@ void test_disassemble_different_mov_families() {
   TEST_ASSERT_EQUAL_STRING(expected_destination, get_name(actual_instruction_2->operands->destination));
   TEST_ASSERT_EQUAL_STRING(expected_source_2, get_name(actual_instruction_2->operands->source));
 
-  TEST_ASSERT_EQUAL_STRING(expected_instruction, actual_instruction_2->definition->name);
-  TEST_ASSERT_EQUAL_STRING(expected_destination, get_name(actual_instruction_2->operands->destination));
-  TEST_ASSERT_EQUAL(expected_source_3, get_immediate_value(actual_instruction_2->operands->source));
+  TEST_ASSERT_EQUAL_STRING(expected_instruction, actual_instruction_3->definition->name);
+  TEST_ASSERT_EQUAL_STRING(expected_destination, get_name(actual_instruction_3->operands->destination));
+  TEST_ASSERT_EQUAL(expected_source_3, get_immediate_value(actual_instruction_3->operands->source));
 
   instruction_destroy(instruction_list);
 }

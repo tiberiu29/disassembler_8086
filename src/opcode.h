@@ -1,6 +1,6 @@
 #ifndef OP_CODE_PATTERN_H
 #define OP_CODE_PATTERN_H
-#include "disassembler.h"
+#include "instruction.h"
 
 typedef struct DecodeResult{
     Instruction *instruction;
@@ -18,5 +18,6 @@ typedef struct OpcodePatternList{
     size_t size;
 }OpcodePatternList;
 
+OpcodePatternList *get_available_patterns();
 #endif
 
