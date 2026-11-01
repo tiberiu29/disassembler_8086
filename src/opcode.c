@@ -9,7 +9,7 @@ PatternFamily **get_supported_pattern_families(size_t *count) {
 
 
   *count = sizeof(available_pattern_families) / sizeof(PatternFamily*);
-  PatternFamily **final_list = malloc(*count);
+  PatternFamily **final_list = malloc(*count * sizeof(*final_list));
 
   for(size_t family_i = 0; family_i < *count; family_i++) {
     final_list[family_i] = available_pattern_families[family_i];
