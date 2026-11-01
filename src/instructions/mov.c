@@ -1,6 +1,5 @@
 #include "data_mapper.h"
 #include "mask_generator.h"
-#include "opcode.h"
 #include "mask_generator.h"
 #include "operand.h"
 #include "register_mapper.h"
@@ -146,7 +145,7 @@ static const OpcodePattern mov_patterns[] = {
 };
 
 // count will be mutated with size of array
-const OpcodePatternList *get_mov_patterns() {
+OpcodePatternList *get_mov_patterns() {
     size_t size = sizeof(mov_patterns) / sizeof(mov_patterns[0]);
     OpcodePatternList *patterns = malloc(sizeof(OpcodePatternList));
     patterns->opcodePatterns = mov_patterns;

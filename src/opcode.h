@@ -18,6 +18,6 @@ typedef struct OpcodePatternList{
     size_t size;
 }OpcodePatternList;
 
-OpcodePatternList *get_available_patterns();
+OpcodePatternList **get_available_patterns(size_t *count);
 #endif
 
