@@ -12,5 +12,11 @@ typedef struct OpcodePattern{
     uint8_t value;
     DecodeResult *(*decode)(uint8_t *bytes, size_t length);
 } OpcodePattern;
+
+typedef struct OpcodePatternList{
+    OpcodePattern *opcodePatterns;
+    size_t size;
+}OpcodePatternList;
+
 #endif
 

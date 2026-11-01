@@ -14,9 +14,17 @@ Operand *init_empty() {
     Operand *empty_op = malloc(sizeof(Operand));
     return empty_op;
 }
+
 Operand *init_register_type(char *register_name){
     Operand *op = init_empty();
     op->type=REGISTER_VALUE;
+    op->name=register_name;
+    return op;
+}
+
+Operand *init_segment_register_type(char *register_name){
+    Operand *op = init_empty();
+    op->type=REGISTER_SEGMENT_VALUE;
     op->name=register_name;
     return op;
 }

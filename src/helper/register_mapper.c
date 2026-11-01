@@ -88,6 +88,33 @@ Operand *map_reg(uint8_t reg, uint8_t width) {
     return init_register_type(name);
 }
 
+
+//OO=ES
+//01=CS,
+//10=SS
+//11 =OS
+Operand *map_seg_reg(uint8_t reg) {
+    char *name;
+    switch(reg){
+        case 0b00000000:
+            name = "ES";
+            break;
+        case 0b00000001:
+            name = "CS";
+            break;
+        case 0b00000010:
+            name = "SS";
+            break;
+        case 0b00000011:
+            name = "OS";
+            break;
+        default:
+            printf("No segment register found");
+            exit(1);
+
+    }
+    return init_segment_register_type(name);
+}
 /*
  * R/M | MOD=10          
  * ----+----------------

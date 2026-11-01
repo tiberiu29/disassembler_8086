@@ -81,7 +81,6 @@ DecodeResult *decode_r_m(uint8_t *bytes, size_t capacity) {
      return result;
 }
 
-
 DecodeResult *decode_immediate_to_reg(uint8_t *bytes, size_t capacity) {
     if(capacity < 2) {
         printf("Cannot access immediate byte");
@@ -145,8 +144,12 @@ static const OpcodePattern mov_patterns[] = {
         .decode = NULL
     }
 };
+
 // count will be mutated with size of array
-const OpcodePattern *get_mov_patterns(size_t *count) {
-    *count = sizeof(mov_patterns) / sizeof(mov_patterns[0]);
-    return mov_patterns;
+const OpcodePatternList *get_mov_patterns() {
+    size_t size = sizeof(mov_patterns) / sizeof(mov_patterns[0]);
+    OpcodePatternList *patterns = malloc(sizeof(OpcodePatternList));
+    patterns->opcodePatterns = mov_patterns;
+    patterns->size = size;
+    return patterns;
 }

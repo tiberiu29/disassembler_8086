@@ -40,4 +40,9 @@ Operand *map_r_m(uint8_t reg, uint8_t width, uint8_t mod, uint8_t *bytes, uint8_
  * 111 |  BH   |  DI
  */
 Operand *map_reg(uint8_t reg, uint8_t width);
+
+//Segment register code: OO=ES, 01=CS, 10=SS, 11 =OS.
+
+Operand *map_seg_reg(uint8_t reg);
+
 #endif
