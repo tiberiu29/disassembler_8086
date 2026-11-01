@@ -4,14 +4,14 @@ CC := gcc
 CPPFLAGS := -Isrc -Isrc/model -Isrc/helper -Isrc/instructions -Iunity
 CFLAGS := -std=gnu11 -Wall -Wextra -Wpedantic -g
 BUILD_DIR := build
+SOURCE_PATTERN := $(shell find src -type f -name '*.c')
 TEST_PATTERN := $(shell find test -type f -name 'test_*.c')
 
 # Production sources only.
-SRC := $(wildcard src/*.c src/model/*.c src/helper/*.c src/instructions/*.c)
+SRC := $(wildcard $(SOURCE_PATTERN))
 OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRC))
 UNITY_OBJ := $(BUILD_DIR)/unity/unity.o
 
-# Discover test files in the root test/ and module test/ folders.
 TEST_SRC := $(wildcard $(TEST_PATTERN))
 TEST_BIN := $(patsubst %.c,$(BUILD_DIR)/%,$(TEST_SRC))
 TEST_OBJ := $(patsubst %.c,$(BUILD_DIR)/%.o,$(TEST_SRC))
