@@ -8,7 +8,7 @@ void tearDown() {}
 
 void test_pattern_families_result() {
     size_t *count = malloc(sizeof(size_t));
-    get_available_patterns(count);
+    get_supported_pattern_families(count);
 
     // Currently we support only 2 families MOV + PUSH
     TEST_ASSERT_EQUAL(2, *count);

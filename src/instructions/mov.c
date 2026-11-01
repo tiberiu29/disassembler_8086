@@ -145,9 +145,9 @@ static const OpcodePattern mov_patterns[] = {
 };
 
 // count will be mutated with size of array
-OpcodePatternList *get_mov_patterns() {
+PatternFamily *get_mov_patterns() {
     size_t size = sizeof(mov_patterns) / sizeof(mov_patterns[0]);
-    OpcodePatternList *patterns = malloc(sizeof(OpcodePatternList));
+    PatternFamily *patterns = malloc(sizeof(PatternFamily));
     patterns->opcodePatterns = mov_patterns;
     patterns->size = size;
     return patterns;

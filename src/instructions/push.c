@@ -21,10 +21,10 @@ static const OpcodePattern push_patterns[] = {
 };
 
 // count will be mutated with size of array
-OpcodePatternList *get_push_patterns() {
+PatternFamily *get_push_patterns() {
     size_t size = sizeof(push_patterns) / sizeof(push_patterns[0]);
     
-    OpcodePatternList *patterns = malloc(sizeof(OpcodePatternList));
+    PatternFamily *patterns = malloc(sizeof(PatternFamily));
 
     patterns->opcodePatterns = push_patterns;
     patterns->size = size;

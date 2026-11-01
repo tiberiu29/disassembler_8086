@@ -13,11 +13,11 @@ typedef struct OpcodePattern{
     DecodeResult *(*decode)(uint8_t *bytes, size_t length);
 } OpcodePattern;
 
-typedef struct OpcodePatternList{
+typedef struct PatternFamily{
     OpcodePattern *opcodePatterns;
     size_t size;
-}OpcodePatternList;
+}PatternFamily;
 
-OpcodePatternList **get_available_patterns(size_t *count);
+PatternFamily **get_supported_pattern_families(size_t *count);
 #endif
 
