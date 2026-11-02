@@ -6,7 +6,18 @@ rm -rf main
 
 SOURCE="$1"
 
-nasm -f elf64 -g -F dwarf "$SOURCE" -o main.o
+case "$SOURCE" in
+    *.asm)
+        nasm -f elf64 -g -F dwarf "$SOURCE" -o main.o
+        ;;
+    *.c)
+        gcc -g -c "$SOURCE" -o main.o
+        ;;
+    *)
+        echo "Unsupported file extension: $SOURCE"
+        exit 1
+        ;;
+esac
 gcc -g main.o -o main
 ./main
 
